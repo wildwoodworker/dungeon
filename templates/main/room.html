@@ -1,29 +1,32 @@
 {% extends "base.html" %}
 
 {% block content %}
-  {% load staticfiles %}
+{% load staticfiles %}
 
-<h2> {{ title }} </h1>
+<div class="container center-block">
 
-<img src="{% static roomPic %}" height=400 class="img-responsive center-block" alt="dungeon">
+    <h2> {{ title }} </h1>
 
-<h3> {{ description }} </h3>
+    <img src="{% static roomPic %}" height=400 class="img-responsive center-block" alt="dungeon">
 
-<br/>
-<h4> {{ question }} </h4>
+    <h3> {{ description }} </h3>
 
-<form action="/nextroom">
-  <div class="form-group">
-    <input type="hidden" name="backpack" value="chiken" />
-    <input type="hidden" name="current_room" value="{{ roomId }}"/>
-    <div class="checkbox">
-    <input type="radio" name="choice" value="1" checked="checked" > door 1<br>
-    <input type="radio" name="choice" value="2"> door 2<br>
-    <input type="radio" name="choice" value="3"> door 3<br>  
-    </div>
-  </div>
-  <input type="submit" value="Submit" class="btn btn-default">
-</form>
+    <br/>
+    <h4> {{ question }} </h4>
+
+    <form action="/nextroom">
+      <div class="form-group">
+        <input type="hidden" name="backpack" value="chiken" />
+        <input type="hidden" name="current_room" value="{{ roomId }}"/>
+        <div class="checkbox">
+        <input type="radio" name="choice" value="1" checked="checked" > door 1<br>
+        <input type="radio" name="choice" value="2"> door 2<br>
+        <input type="radio" name="choice" value="3"> door 3<br>  
+        </div>
+      </div>
+      <input type="submit" value="Submit" class="btn btn-default">
+    </form>
+</div>
 
 <h4>room Id: {{ roomId}} </h4>
 
