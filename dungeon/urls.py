@@ -19,7 +19,7 @@ from django.urls import path
 from dungeon import views
 
 urlpatterns = [
-  url(r'^$', views.home, name='home'),
-  #path('room/<int:room_id>/', views.room, name='room'),
-  path('nextroom', views.nextroom, name='nextroom'),
+  path("", views.home, name='home'),
+  path("newgame", views.newgame, name='newgame'),
+  path("room", views.room, name='room'),
 ]

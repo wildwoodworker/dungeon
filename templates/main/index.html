@@ -4,17 +4,14 @@
   {% load staticfiles %}
 
 <div class="container">
-  <h2>Welcome to our game</h2>
+  <h2>Welcome to Magalie's game</h2>
   <img src="{% static 'dungeon.png' %%}" height=400 class="img-responsive center-block" alt="dungeon">
-
 </div>
 
-
-<form action="/nextroom">
+<form method="POST" action="{% url 'newgame' %}">
+  {% csrf_token %}
   <div class="form-group container center-block>
-    <input type="hidden" name="backpack" value="" />
-    <input type="hidden" name="current_room" value="1"/>
-    <input type="hidden" name="choice" value="0"/>
+    <input type="hidden" name="backpack" value=""/>
   <input type="submit" value="Start new game" class="btn btn-default">
    </div>
 </form>

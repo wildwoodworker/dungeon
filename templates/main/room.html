@@ -5,30 +5,35 @@
 
 <div class="container center-block">
 
-    <h2> {{ title }} </h1>
+    <h2> {{ room.title }} </h1>
 
-    <img src="{% static roomPic %}" height=400 class="img-responsive center-block" alt="dungeon">
+    <img src="{% static room.roomPic %}" height=400 class="img-responsive center-block" alt="dungeon">
 
-    <h3> {{ description }} </h3>
+    <h3> {{ room.description }} </h3>
 
     <br/>
-    <h4> {{ question }} </h4>
+    <h4> {{ room.question }} </h4>
 
-    <form action="/nextroom">
-      <div class="form-group">
-        <input type="hidden" name="backpack" value="chiken" />
-        <input type="hidden" name="current_room" value="{{ roomId }}"/>
-        <div class="checkbox">
-        <input type="radio" name="choice" value="1" checked="checked" > door 1<br>
-        <input type="radio" name="choice" value="2"> door 2<br>
-        <input type="radio" name="choice" value="3"> door 3<br>  
-        </div>
-      </div>
-      <input type="submit" value="Submit" class="btn btn-default">
-    </form>
+  <div class="container">
+  {% for choice in room.choices %}
+      <a href="javascript:{document.getElementById('{{ choice.key }}').submit()}"><button class="btn btn-primary btn-lg btn-block">{{ choice.prompt }}</button></a>
+  {% endfor %}
+  </div>
 </div>
 
-<h4>room Id: {{ roomId}} </h4>
+{% for choice in room.choices %}
+  <form id="{{ choice.key }}" method="POST" action="{% url 'room' %}">
+    {% csrf_token%}
+    <input type="hidden" name=key value="{{ choice.key }}" />
+    <input type="hidden" name=backpack value="{{ backpack }}" />
+    <input type="hidden" name=currentRoom value="{{ room.id }}" />
+  </form>
+{% endfor %}
+
+<br />
+<h4> Debug values </h3>
+<li> room Id: {{ room.id}} </li>
+<li> my backpack: {{ backpack }} </li>
 
 {% endblock content %}
 
