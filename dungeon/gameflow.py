@@ -1,4 +1,4 @@
-from .rooms import rooms
+from .rooms import getRoomDetails
 from django.http import Http404
 
 # This method determine the next step in the game
@@ -12,24 +12,25 @@ from django.http import Http404
 #       room: room details
 #    room details information.  Game over is a special room.
 def nextRoom(currentRoomId, backpack, selected):
+    # Prepare my return dictionary describing the next room
+    # Init with empty dictionary
     info = {}
 
     # insert your logic on which room to go next
-    
-    info['backpack'] =  backpack + " was:" + str(selected) 
-    # return the next room object  
 
     if (currentRoomId != 0):
         if selected == 's1':
-            info['room']=rooms['1']
+            info['room']=getRoomDetails('1')
             info['roomid']=1
         elif selected == 's2':
-            info['room']=rooms['2']
+            info['room']=getRoomDetails('2')
             info['roomid']=1
         elif selected == 's3':
-            info['rooms']=rooms['3']
+            info['room']=getRoomDetails('3')
             info['roomid']=3
         else:
             raise Http404("Invalid next room")
+
+    info['backpack'] =  backpack + " was:" + str(selected) 
     return info
 
