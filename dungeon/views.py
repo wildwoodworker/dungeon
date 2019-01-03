@@ -39,14 +39,18 @@ def room(request):
       # We default to room 1 if no room is specified in the GET request
       # and empty backpack
       info['roomid']='1'
-      info['backpack']=""
 
     if 'backpack' in request.GET:
-      info['backpack']=request.GET['backpack']
+      backpackStr = request.GET['backpack']
+      if backpackStr != "":
+        backpack=backpackStr.split(',')
+      else:
+        backpack=[]  
+      info['backpack']=backpack
     else:
-      info['backpack']=""
+      info['backpack']=[]
 
-    info['room'] = getRoomDetails(str(info['roomid']))
+    info['room'] = getRoomDetails(info['roomid'])
     if info['room'] == None:
       raise Http404("Room details does not exist")
     return render(request, info['room']['template'], info)
@@ -56,7 +60,11 @@ def room(request):
     # Collect POST attributes 
     #
     user_selection=request.POST['key']
-    backpack=request.POST['backpack']
+    backpackStr=request.POST['backpack']
+    if backpackStr != "":
+      backpack=backpackStr.split(',')
+    else:
+      backpack=[]
     currentRoom=request.POST['currentRoom']
     # 
     # Figure out where to go nect
@@ -69,7 +77,7 @@ def room(request):
     #    return render(request, info['room']['template'], info)
     # Option 2: redirect to GET request with the right parameters for the next page
     base_url = reverse('room')
-    query_string =  urlencode({'roomid': info['roomid'], 'backpack': info['backpack']})
+    query_string =  urlencode({'roomid': info['roomid'], 'backpack': ','.join(info['backpack']) })
     url = '{}?{}'.format(base_url, query_string)  # /room/?roomid=4&backpack=chicken
     return redirect(url)  
 

@@ -3,8 +3,8 @@
 #
 
 rooms = {
-    '0': {
-        'id': 0,
+    'gameover': {
+        'id': 'gameover',
         'template': 'main/room.html', 
         'roomPic': 'gameover.jpg',
         'title': 'Gameover',
@@ -14,7 +14,7 @@ rooms = {
                     ],
         },
     '1': {
-        'id': 1,
+        'id': '1',
         'template': 'main/room.html', 
         'roomPic': '3doors.jpg',
         'title': 'Cave room 1',
@@ -26,7 +26,7 @@ rooms = {
                     ],
         },
     '2': {
-        'id': 2,
+        'id': '2',
         'template': 'main/room.html', 
         'roomPic': '3doors.jpg',
         'title': 'Cave room 2',
@@ -38,7 +38,7 @@ rooms = {
                     ],
         },
     '3': {
-        'id': 3,
+        'id': '3',
         'template': 'main/room.html', 
         'roomPic': '3doors.jpg',
         'title': 'Cave room 3',

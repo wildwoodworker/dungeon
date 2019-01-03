@@ -1,39 +1,49 @@
 from .gamedata import getRoomDetails
 from django.http import Http404
 
-# This method determine the next step in the game
+# This method determines the next room within the game.  It also control what you add or remove to your
+# packback.
+#
 # input:
-#    currentRoomId: current room number integer, 1 is the first room, 0 is game over
-#    backpack: list of actifacts you are carrying around - string
-#    selected: this is the choice selected by the player. 's1', 's2', 's3', s4...
+#    currentRoomId: String of the current room number
+#    backpack: List of string
+#    selected: String this is the choice selected by the player. 's1', 's2', 's3', s4...
+#
 # output:
-#    object with keys
-#       backpack: string
+#    Dictionary with following keys
+#       roomid: next room identifier string
+#       backpack: list of string
 #       room: room details
-#    room details information.  Game over is a special room.
+#
 def nextRoom(currentRoomId, backpack, selected):
     # Prepare my return dictionary describing the next room
     # Init with empty dictionary
     info = {}
+    # copy existing backpack before modifying
+    info['backpack']=backpack[:]
 
     # insert your logic on which room to go next
 
-    if (currentRoomId != '0'):
+    if (currentRoomId != 'gameover'):
         if selected == 's1':
-            info['roomid']=1
-            info['room']=getRoomDetails('2')
+            info['roomid']='1'
+            info['room']=getRoomDetails('1')
         elif selected == 's2':
-            info['roomid']=2
+            info['roomid']='2'
             info['room']=getRoomDetails('2')
         elif selected == 's3':
-            info['roomid']=0  # game over
-            info['room']=getRoomDetails('0')
+            info['roomid']='gameover'  # game over
+            info['room']=getRoomDetails('gameover')
         else:
             raise Http404("Invalid next room")
-        info['backpack'] =  backpack + " was:" + str(selected)     
+
+        # replace by your own logic on how to modify the backpack list
+        info['backpack'].append(str(selected)) 
     else:
-        info['roomid']=1
-        info['backpack'] =  ""
+        # this is the action from the gameover page - i.e. start a new game
+        # Redirect to room 1 and empty backpack
+        info['roomid']='1'
+        info['backpack']=[]
 
     return info
 

@@ -25,7 +25,7 @@
   <form id="{{ choice.key }}" method="POST" action="{% url 'room' %}">
     {% csrf_token%}
     <input type="hidden" name=key value="{{ choice.key }}" />
-    <input type="hidden" name=backpack value="{{ backpack }}" />
+    <input type="hidden" name=backpack value="{{ backpack|join:','  }}" />
     <input type="hidden" name=currentRoom value="{{ room.id }}" />
   </form>
 {% endfor %}
@@ -33,7 +33,7 @@
 <br />
 <h4> Debug values </h3>
 <li> room Id: {{ room.id}} </li>
-<li> my backpack: {{ backpack }} </li>
+<li> my backpack: {{ backpack|join:',' }} </li>
 
 {% endblock content %}
 
