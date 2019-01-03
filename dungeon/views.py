@@ -37,7 +37,9 @@ def room(request):
       info['roomid']=request.GET['roomid']
     else:
       # We default to room 1 if no room is specified in the GET request
-      info['roomid']=1
+      # and empty backpack
+      info['roomid']='1'
+      info['backpack']=""
 
     if 'backpack' in request.GET:
       info['backpack']=request.GET['backpack']
@@ -46,7 +48,7 @@ def room(request):
 
     info['room'] = getRoomDetails(str(info['roomid']))
     if info['room'] == None:
-      raise Http404("room does not exist")
+      raise Http404("Room details does not exist")
     return render(request, info['room']['template'], info)
 
   elif request.method == 'POST':

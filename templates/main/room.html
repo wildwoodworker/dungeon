@@ -16,7 +16,7 @@
 
   <div class="container">
   {% for choice in room.choices %}
-      <a href="javascript:{document.getElementById('{{ choice.key }}').submit()}"><button class="btn btn-primary btn-lg btn-block">{{ choice.prompt }}</button></a>
+      <a href="javascript:{document.getElementById('{{ choice.key }}').submit()}"><button class="btn btn-secondary btn-lg btn-block">{{ choice.prompt }}</button></a>
   {% endfor %}
   </div>
 </div>
