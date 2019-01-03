@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect
 from django.http import Http404
-from .rooms import getRoomDetails,rooms
+from .gamedata import getRoomDetails,rooms
 from .gameflow import nextRoom
+from django.urls import reverse
+from urllib.parse import urlencode
 
 # Create your views here.
 def home(request):
-    print (request)
     return render(request, 'main/index.html')
 
 def newgame(request):
@@ -28,7 +29,10 @@ def newgame(request):
 #
 def room(request):
   info={}
+
   if request.method == 'GET':
+    # To jump directly to a room, just do /room?roomid=3&backpack=whatyouwant
+
     if 'roomid' in request.GET:
       info['roomid']=request.GET['roomid']
     else:
@@ -43,11 +47,28 @@ def room(request):
     info['room'] = getRoomDetails(str(info['roomid']))
     if info['room'] == None:
       raise Http404("room does not exist")
-    
+    return render(request, info['room']['template'], info)
+
   elif request.method == 'POST':
-    selection=request.POST['key']
+    #
+    # Collect POST attributes 
+    #
+    user_selection=request.POST['key']
     backpack=request.POST['backpack']
     currentRoom=request.POST['currentRoom']
-    info = nextRoom(currentRoom, backpack, selection)
-  
-  return render(request, info['room']['template'], info)
+    # 
+    # Figure out where to go nect
+    #
+    info = nextRoom(currentRoom, backpack, user_selection)
+    # 
+    # We have two choices here.  Redirect to the GET request or render the page directly
+    # The redirect is easier fro debugging.  
+    # Option 1: render:
+    #    return render(request, info['room']['template'], info)
+    # Option 2: redirect to GET request with the right parameters for the next page
+    base_url = reverse('room')
+    query_string =  urlencode({'roomid': info['roomid'], 'backpack': info['backpack']})
+    url = '{}?{}'.format(base_url, query_string)  # /room/?roomid=4&backpack=chicken
+    return redirect(url)  
+
+

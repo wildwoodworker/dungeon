@@ -1,6 +1,18 @@
-
+#
+# Game data
+#
 
 rooms = {
+    '0': {
+        'id': 0,
+        'template': 'main/room.html', 
+        'roomPic': 'gameover.jpg',
+        'title': 'Gameover',
+        'description':'explain why you died', 
+        'question':'...',
+        'choices': [ {'prompt': 'play again', 'key': 's1'},
+                    ],
+        },
     '1': {
         'id': 1,
         'template': 'main/room.html', 
