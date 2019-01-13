@@ -15,35 +15,69 @@ from django.http import Http404
 #       backpack: list of string
 #       room: room details
 #
-def nextRoom(currentRoomId, backpack, selected):
+def nextRoom(currentRoomId, backpack, selection):
     # Prepare my return dictionary describing the next room
     # Init with empty dictionary
     info = {}
-    # copy existing backpack before modifying
+    # copy existing backpack before potentially modifying
     info['backpack']=backpack[:]
 
-    # insert your logic on which room to go next
-
-    if (currentRoomId != 'gameover'):
-        if selected == 's1':
-            info['roomid']='1'
-            info['room']=getRoomDetails('1')
-        elif selected == 's2':
-            info['roomid']='2'
-            info['room']=getRoomDetails('2')
-        elif selected == 's3':
-            info['roomid']='gameover'  # game over
-            info['room']=getRoomDetails('gameover')
-        else:
-            raise Http404("Invalid next room")
-
-        # replace by your own logic on how to modify the backpack list
-        info['backpack'].append(str(selected)) 
-    else:
-        # this is the action from the gameover page - i.e. start a new game
-        # Redirect to room 1 and empty backpack
+    if (currentRoomId == 'gameover'):
+        #  The only possible action from gameover is to start a new game
+        #  i.e. redirect to room 1 and empty backpack
         info['roomid']='1'
         info['backpack']=[]
-
+    else:
+        # match the next room
+        action= getActionFromSelection(currentRoomId, selection, info)
+        if action == None:
+            raise Http404("error matching action from selection")
+        
+        # process matching response
+        nextRoomId = action.get('newRoom')
+        if nextRoomId == None:
+            raise Http404("No matching next room")
+    
+        process_backpack_action(action.get('newBackPack'), info)
+        # Copy over the remaining field into the dictionary 
+        info['roomid'] = action.get('newRoom')
+        info['room']=getRoomDetails(action.get('newRoom'))
+        info['whatsup'] = action.get('whatsup')
     return info
+
+def getActionFromSelection(currentRoomId, selection, info):
+    bestmatch = {}
+    score=0
+    # Loop to possibility and find mapping
+    roomDetail = getRoomDetails(currentRoomId)
+    actions = roomDetail.get('actions')
+    if actions == None:
+        return None
+    for action in actions:
+        # Find how close the response is using weight
+        lcount=0
+        if action['key'] == selection:
+            lcount=lcount + 5
+            # check the backpack for extra credits
+            backpack_rule = action.get('bpr')
+            if (backpack_rule != None) and (backpack_rule != ''):
+                # we must check if we have the backpack item
+                # TODO: code could be extended to check multiple items within the backpack
+                if backpack_rule in info['backpack']:
+                    lcount = lcount + 5
+        if lcount > score:
+            # replace our bestmatch action given this one has a higher score
+            # and remember the new higher score
+            bestmatch = action
+            score=lcount
+    return bestmatch
+
+
+def process_backpack_action(rule, info):
+    if rule == None:
+        # no backpack rule, simply return
+        return
+    if rule.startswith('+'):
+        # we are adding an element to the backpack
+        info['backpack'].append(rule[1:])
 
