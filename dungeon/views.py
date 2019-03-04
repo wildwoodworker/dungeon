@@ -53,6 +53,12 @@ def room(request):
     info['room'] = getRoomDetails(info['roomid'])
     if info['room'] == None:
       raise Http404("Room details does not exist")
+
+    if 'whatsup' in request.GET:
+      info['whatsup'] = request.GET['whatsup']
+    else:
+      info['whatsup'] = ""
+    
     return render(request, info['room']['template'], info)
 
   elif request.method == 'POST':
@@ -77,7 +83,7 @@ def room(request):
     #    return render(request, info['room']['template'], info)
     # Option 2: redirect to GET request with the right parameters for the next page
     base_url = reverse('room')
-    query_string =  urlencode({'roomid': info['roomid'], 'backpack': ','.join(info['backpack']) })
+    query_string =  urlencode({'roomid': info['roomid'], 'backpack': ','.join(info['backpack']), 'whatsup': info['whatsup']})
     url = '{}?{}'.format(base_url, query_string)  # /room/?roomid=4&backpack=chicken
     return redirect(url)  
 

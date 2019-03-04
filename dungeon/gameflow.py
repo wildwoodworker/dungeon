@@ -21,6 +21,7 @@ def nextRoom(currentRoomId, backpack, selection):
     info = {}
     # copy existing backpack before potentially modifying
     info['backpack']=backpack[:]
+    info['whatsup']=""
 
     if (currentRoomId == 'gameover'):
         #  The only possible action from gameover is to start a new game
