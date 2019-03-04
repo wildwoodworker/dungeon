@@ -43,7 +43,8 @@ def nextRoom(currentRoomId, backpack, selection):
         # Copy over the remaining field into the dictionary 
         info['roomid'] = action.get('newRoom')
         info['room']=getRoomDetails(action.get('newRoom'))
-        info['whatsup'] = action.get('whatsup')
+        # whatsup field is option. If missing, we simply let it be empty string
+        info['whatsup'] = action.get('whatsup',"")
     return info
 
 def getActionFromSelection(currentRoomId, selection, info):
